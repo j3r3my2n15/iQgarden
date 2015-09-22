@@ -9,7 +9,7 @@ L’objectif de cette « boite » est de faire pousser des végétaux tels que d
 Nul besoin de connaître la botanique, ou de lire des livres pour savoir faire pousser une graine. Ici iQgarden se charge de tout pour vous. Votre seul travail, si on peut dire, est de remettre de l’eau dans le réservoir quand ce dernier vous l’indique. Et d’apporter les nutriments nécessaire à vos cultures.
 
 # Fonctionnalités
- -Arrosage Automatique
+ - Arrosage Automatique
  - Lumiere	Contrôle de la lumière
  - Thermometre	Contrôle de la température
  - Humidite	Contrôle de l’humidité	
