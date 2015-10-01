@@ -31,7 +31,7 @@ ShareAlike — If you remix, transform, or build upon the material, you must dis
 //###           LIBRARY              ###
 //######################################
 #include <SPI.h>
-#include <Ethernet.h> //eth
+//#include <Ethernet.h> //eth
 #include <LiquidCrystal.h>
 #include <config.h>
 #include <ds3231.h>
@@ -107,6 +107,7 @@ RFID rfid(SS_PIN,RST_PIN);
 //Tone
 int toneOk = 0;
 //Ethernet
+/*
 #define DEVICEID "3103"
 char passphrase[] = "efmlIJzdjdugaçèè!54TY3Bhjdbz"; 
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
@@ -118,7 +119,7 @@ IPAddress server(192,168,1,130);
 unsigned long lastConnectionTime = 0;          // last time you connected to the server, in milliseconds
 boolean lastConnected = false;                 // state of the connection last time through the main loop
 const unsigned long postingInterval = 10*10;  //delay between updates to pachube.com
-
+*/
 //######################################
 //###             SETUP              ###
 //######################################  
@@ -237,6 +238,7 @@ void setup()
 //###             LOOP               ###
 //######################################  
 void loop(){
+  int errorCode = 0;
   //check du delais depuis le dernier controle
   if(needCheck() == 1) getAllMesure();
 
@@ -269,14 +271,31 @@ void loop(){
         LCD_display(0, 0, "Mode :",ALN_LEFT,0,1);
         LCD_display(0, 1, "EPILEPTIQUE",ALN_CENTER,0,0);
         break;
+      case MODE_DEBUG:
+        LCD_display(0, 0, "Mode :",ALN_LEFT,0,1);
+        LCD_display(0, 1, "DEBUG",ALN_CENTER,0,0);
+        delay(1000);
+        errorCode = 9;
+        //cardID = 0;
+        break;
       default:
        LCD_display(0, 0, "Mode :",ALN_LEFT,0,1);
        LCD_display(0, 1, "INCONNUE",ALN_CENTER,0,0);
+       delay(1000);
+       currentMode = 0;
+       errorCode = 9;
+       char cardCode[3];
+       toolToDisplay(cardID,cardCode,0);
+       LCD_display(0, 0, cardCode,ALN_CENTER,0,1);
+       delay(2000);
        break;
     }
     delay(3000);
-    LCD_display(0, 1, "GO !!",ALN_CENTER,0,1);
-    delay(1000);
+    if(errorCode == 0){
+      LCD_display(0, 1, "GO !!",ALN_CENTER,0,1);
+      delay(1000);
+    }
+    
   }
 
   if(currentMode == 0){
@@ -312,6 +331,10 @@ void loop(){
       case MODE_EPILEPTIQUE:
         modeEpileptique();
         break;
+      case MODE_DEBUG:
+        //modeEpileptique();
+        modeMakerFaire();
+        break;
       default:
 
        break;
@@ -320,30 +343,13 @@ void loop(){
   }
   
   delay(500);
-
-/*
-  //allumage de la lumiere si inferieur à 50%
-  if(light < 60) relay_Led12(RELAY_ON);
-  else relay_Led12(RELAY_OFF);
-
-  //reduction de l'humidité de la boite si Humidité > 50%
-  if(humi >= 47) {
-    relay_FanExt(RELAY_ON);
-    relay_FanInj(RELAY_ON);
-  }
-  //reduction de l'humidité de la boite si Humidité > 50%
-  if(humi <= 46.5) {
-    relay_FanExt(RELAY_OFF);
-    relay_FanInj(RELAY_OFF);
-  }
-  */
 }
 
 /*########################################################
 ###########    FONCTIONS SMART DU SYSTEME   ##############
 ########################################################*/
 void modeEpileptique(){
-  tetris();
+  //tetris();
   relay_Led12(RELAY_ON);
   tone(PIN_TONE,NOTE_C6,100);
   delay(200);
@@ -756,6 +762,7 @@ int LCD_logo(){
 	lcd.createChar(7, logo_B4);
 	
 	lcd.begin(16, 2);
+  delay(250);
 	
 	LCD_displayChar(0,0,0,true);
 	LCD_displayChar(1,0,1,false);
@@ -1064,6 +1071,7 @@ int relay_FanRef(bool  state){
 /*
  * Permet d'envoyer les derniers etat des capteurs sur le serveur web
  */
+ /*
 int EthSendData(){
   int temp = 0;
   int humi = 0;
@@ -1122,7 +1130,7 @@ int EthSendData(){
 
   lastConnected = client.connected();
 }
-
+*/
 /*########################################################
 ###########      FONCTIONS RTCDS3231          ############
 ########################################################*/

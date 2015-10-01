@@ -52,3 +52,4 @@ ShareAlike — If you remix, transform, or build upon the material, you must dis
 #define MODE_BASILIC -16573
 #define MODE_TOMATE 20683                                        
 #define MODE_EPILEPTIQUE 23803
+#define MODE_DEBUG -20759
